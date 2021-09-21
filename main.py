@@ -1,4 +1,4 @@
-import pyautogui, time, datetime, os
+import xlrd, pyautogui, time, datetime, os
 
 time_start = ["09:00", "10:05", "11:10", "12:15", "13:20", "14:25", "15:30"]
 time_end = ["09:45", "10:50", "11:55", "13:00", "14:05", "15:10", "16:15"]
