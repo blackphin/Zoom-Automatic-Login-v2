@@ -1,8 +1,9 @@
-import xlrd, pyautogui, time, datetime, os
+import xlrd, pyautogui, time, datetime, os, csv
 
-time_start = ["09:00", "10:05", "11:10", "12:15", "13:20", "14:25", "15:30"]
-time_end = ["09:45", "10:50", "11:55", "13:00", "14:05", "15:10", "16:15"]
+time_slots = 8
 
+
+# __precode__
 wb1 = xlrd.open_workbook(
     r"D:\OneDrive\Repositories\Zoom-Automatic-Login-v2\Credentials.xls"
 )
@@ -15,6 +16,7 @@ sheet_credential.cell_value(0, 0)
 sheet_timetable.cell_value(0, 0)
 
 
+# __functions__
 def launch():
     ...
 
@@ -52,5 +54,37 @@ def auto_join(id, passw):
     pyautogui.hotkey("win", "d")
 
 
-def timelist():
-    ...
+time_start = []
+time_end = []
+
+
+def time_list():
+    for x in range(sheet_timetable.ncols - 1):
+        time_range = sheet_timetable.cell_value(0, x + 1)
+        time_start.append(time_range[0:5])
+        time_end.append(time_range[6:11])
+
+
+subject_list = []
+
+
+def subjects_today():
+    today_day = datetime.datetime.today().strftime("%A")
+    for x in range(sheet_timetable.nrows):
+        if today_day == sheet_timetable.cell_value(x, 0):
+            list = sheet_timetable.row_values(x)[1:]
+            for x in list:
+                if list.count(x) != 1 and x != "":
+                    list[list.index(x) + 1] = ""
+            subject_list.extend(list)
+
+
+# __main__
+time_list()
+print(time_start, time_end)
+
+subjects_today()
+print(subject_list)
+
+
+# datetime.datetime.strptime(time, "%H%M")
