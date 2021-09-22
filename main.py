@@ -119,7 +119,7 @@ credentials_list = []
 def credentials():
     global credentials_list, subject_mode
     for v in subject_mode:
-        if v != "":
+        if v != "" and v != "R":
             for i in range(sheet_credential.nrows):
                 if v[0] == sheet_credential.cell_value(i, 0):
                     row_number = i
@@ -141,6 +141,8 @@ def credentials():
                     )
         elif v == "":
             credentials_list.append("")
+        elif v == "R":
+            credentials_list.append("R")
 
 
 # __main__
