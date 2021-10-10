@@ -1,5 +1,6 @@
-import xlrd, time, datetime, os, csv
+import xlrd, time, datetime, os
 import pyautogui as auto
+from prettytable import PrettyTable
 
 time_slots = 8
 
@@ -36,7 +37,7 @@ def start_zoom(x=0):
     auto.hotkey("win", "up")
 
 
-def auto_join(id="977 0864 8127", passw="261893"):
+def auto_join(id, passw):
     auto.click(x=776, y=433)
     time.sleep(0.5)
     auto.click(x=769, y=466)
@@ -57,15 +58,15 @@ def kill_zoom(x=0):
         auto.hotkey("ctrl", "win", "f4")
 
 
-def wait_till(timea):
+def wait_till(timea, subject):
     today = datetime.date.today()
     dt = datetime.datetime.strptime(timea, "%H:%M")
     when = datetime.datetime(*today.timetuple()[:3], *dt.timetuple()[3:6])
     wait_time = (when - datetime.datetime.now()).total_seconds()
     if wait_time < 0:
-        print(f"Time {when} has already passed")
+        print(f"Time to join the " + subject + " Class:{when} has already passed")
     else:
-        print(f"Waiting {wait_time} seconds until {when}")
+        print(f"Waiting {wait_time} seconds until {when} to join " + subject + " class")
         time.sleep(wait_time)
 
 
@@ -74,10 +75,12 @@ time_end = []
 
 
 def time_list():
+    global time_start, time_end
     for x in range(sheet_timetable.ncols - 1):
         time_range = sheet_timetable.cell_value(0, x + 1)
         time_start.append(time_range[0:5])
         time_end.append(time_range[6:11])
+    return time_start, time_end
 
 
 subject_list = []
@@ -97,6 +100,7 @@ def subjects_today(today_day=day):
             subject_list.extend(list)
             day_index = x
             break
+    return list
 
 
 subject_mode = []
@@ -111,6 +115,7 @@ def mode():
                 z,
                 sheet_mode.cell_value(day_index, subject_mode.index(z) + 1),
             ]
+    return subject_mode
 
 
 credentials_list = []
@@ -143,19 +148,37 @@ def credentials():
             credentials_list.append("")
         elif v == "R":
             credentials_list.append("R")
+    return credentials_list
 
 
 # __main__
-time_list()
+
+
+def start_sequence():
+    time_list()
+    subjects_today()
+    mode()
+    credentials()
+
+
+days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+
+
+def join_meeting():
+    for x in range(8):
+        if subject_list[x] != "R" and subject_list[x] != "":
+            kill_zoom()
+            wait_till(time_start[x], subject_list[x])
+            start_zoom()
+            auto_join(credentials_list[x][0], credentials_list[x][1])
+        ...
+
+
+start_sequence()
+
+print("Running " + days[day_index - 1] + "'s Schedule")
 print(time_start)
-print(time_end)
-
-subjects_today()
 print(subject_list)
-print(day_index)
-
-mode()
 print(subject_mode)
-
-credentials()
 print(credentials_list)
+join_meeting()
