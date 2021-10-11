@@ -26,7 +26,7 @@ def start_zoom(x=0):
     auto.FAILSAFE = False
     if x == 1:
         time.sleep(0.5)
-        auto.hotkey("ctrl", "win", "d")
+        auto.hotkey("win", "d")
     time.sleep(0.5)
     auto.press("win")
     time.sleep(0.5)
@@ -41,6 +41,7 @@ def auto_join(id, passw):
     auto.click(x=776, y=433)
     time.sleep(0.5)
     auto.click(x=769, y=466)
+    time.sleep(1)
     auto.write(message=id)
     auto.press("enter")
     time.sleep(2)
@@ -64,10 +65,22 @@ def wait_till(timea, subject):
     when = datetime.datetime(*today.timetuple()[:3], *dt.timetuple()[3:6])
     wait_time = (when - datetime.datetime.now()).total_seconds()
     if wait_time < 0:
-        print(f"Time to join the " + subject + " Class:{when} has already passed")
+        print(f"Time to join the {subject} Lecture: {when} has already passed")
+        q = str(input("Do you still want to join this lecture?(Yes/No) >>"))
+        if q.lower() == "yes":
+            print(f"Joining {subject}'s class")
+            return 1
+        elif q.lower() == "no":
+            return 0
     else:
-        print(f"Waiting {wait_time} seconds until {when} to join " + subject + " class")
+        print(
+            f"Waiting {int(wait_time/60)} minutes until {when} to join "
+            + subject
+            + " class"
+        )
         time.sleep(wait_time)
+        print(f"Joining {subject}'s class")
+        return 1
 
 
 time_start = []
@@ -167,10 +180,10 @@ days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sun
 def join_meeting():
     for x in range(8):
         if subject_list[x] != "R" and subject_list[x] != "":
-            kill_zoom()
-            wait_till(time_start[x], subject_list[x])
-            start_zoom()
-            auto_join(credentials_list[x][0], credentials_list[x][1])
+            if wait_till(time_start[x], subject_list[x]) == 1:
+                kill_zoom()
+                start_zoom(1)
+                auto_join(credentials_list[x][0], credentials_list[x][1])
         ...
 
 
