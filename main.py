@@ -1,6 +1,5 @@
 import xlrd, time, datetime, os
 import pyautogui as auto
-from prettytable import PrettyTable
 
 time_slots = 8
 
@@ -33,18 +32,19 @@ def start_zoom(x=0):
     auto.write(message="start zoom")
     time.sleep(0.5)
     auto.press("enter")
-    time.sleep(5)
+    time.sleep(10)
     auto.hotkey("win", "up")
 
 
 def auto_join(id, passw):
+    time.sleep(1)
     auto.click(x=776, y=433)
-    time.sleep(0.5)
+    time.sleep(4)
     auto.click(x=769, y=466)
     time.sleep(1)
     auto.write(message=id)
     auto.press("enter")
-    time.sleep(2)
+    time.sleep(4)
     auto.click(x=769, y=466)
     auto.write(message=passw)
     auto.press("enter")
