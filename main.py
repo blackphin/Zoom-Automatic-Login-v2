@@ -1,7 +1,7 @@
 import xlrd, time, datetime, os
 import pyautogui as auto
 
-time_slots = 8
+time_slots = 9
 
 
 # __precode__
@@ -178,7 +178,7 @@ days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sun
 
 
 def join_meeting():
-    for x in range(8):
+    for x in range(9):
         if subject_list[x] != "R" and subject_list[x] != "":
             if wait_till(time_start[x], subject_list[x]) == 1:
                 kill_zoom()
